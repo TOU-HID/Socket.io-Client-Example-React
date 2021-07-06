@@ -11,8 +11,8 @@ const Search = Input.Search
 
 
 class componentName extends Component {
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 	}
 
 	onConnect(value) {
