@@ -48,7 +48,7 @@ class componentName extends Component {
 	}
 
 	onConnect = () => {
-		if (!this.socket.id) {
+		if (!this.socket.id && !this.state.showStop) {
 			var logs = this.state.logs;
 			if (validateJSON(this.state.payload)) {
 				if (secureURLRegex.test(this.state.url)) {
