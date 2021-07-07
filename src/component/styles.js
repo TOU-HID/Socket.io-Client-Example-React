@@ -1,5 +1,4 @@
-export default {
-
+const styles = {
 	headerTitle: {
 		marginBottom: '15px',
 		fontSize: '30px'
@@ -34,3 +33,5 @@ export default {
 		marginTop: '15px'
 	}
 }
+
+export default styles
