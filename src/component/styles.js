@@ -31,6 +31,15 @@ const styles = {
 	},
 	clearLogButton: {
 		marginTop: '15px'
+	},
+	footerText: {
+		textAlign: 'right',
+		paddingRight: '20px',
+		fontSize: '16px'
+	},
+	footerTextBold: {
+		fontWeight: 'bold',
+		paddingBottom: '15px'
 	}
 }
 
