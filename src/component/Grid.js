@@ -167,78 +167,88 @@ class componentName extends Component {
 
 	render() {
 		return (
-			<Row>
-				<Col style={styles.leftContainer}
-					xxl={9} xl={10} lg={12} md={24} sm={24} xs={24} >
-					<h4 style={styles.headerTitle} >Socket.io Client</h4>
-					{this.state.isConnected ?
-						<Search
-							placeholder='message:send'
-							enterButton='Emit'
-							size='large'
-							autoComplete
-							value={this.state.event}
-							onChange={this.onChangeEventName}
-							onSearch={this.onEmit}
-						/> :
-						<Search
-							placeholder='https://example.com'
-							enterButton='Connect'
-							size='large'
-							autoComplete
-							value={this.state.url}
-							onChange={this.onChangeAddress}
-							onSearch={this.onConnect}
+			<>
+				<Row>
+					<Col style={styles.leftContainer}
+						xxl={9} xl={10} lg={12} md={24} sm={24} xs={24} >
+						<h4 style={styles.headerTitle} >Socket.io Client</h4>
+						{this.state.isConnected ?
+							<Search
+								placeholder='message:send'
+								enterButton='Emit'
+								size='large'
+								autoComplete
+								value={this.state.event}
+								onChange={this.onChangeEventName}
+								onSearch={this.onEmit}
+							/> :
+							<Search
+								placeholder='https://example.com'
+								enterButton='Connect'
+								size='large'
+								autoComplete
+								value={this.state.url}
+								onChange={this.onChangeAddress}
+								onSearch={this.onConnect}
+							/>
+						}
+						<h4 style={styles.payloadEditorTitle}>
+							{this.state.isConnected ? 'Event Payload (JSON)' : 'Socket.io Option (JSON)'}
+						</h4>
+						<AceEditor
+							name='SocketOption'
+							mode='json'
+							theme='monokai'
+							fontSize={16}
+							tabSize={2}
+							style={styles.payloadEditor}
+							showGutter={true}
+							highlightActiveLine={true}
+							enableSnippets={true}
+							enableBasicAutocompletion={true}
+							enableLiveAutocompletion={true}
+							value={this.state.payload}
+							onChange={this.onChangePayload}
 						/>
-					}
-					<h4 style={styles.payloadEditorTitle}>
-						{this.state.isConnected ? 'Event Payload (JSON)' : 'Socket.io Option (JSON)'}
-					</h4>
-					<AceEditor
-						name='SocketOption'
-						mode='json'
-						theme='monokai'
-						fontSize={16}
-						tabSize={2}
-						style={styles.payloadEditor}
-						showGutter={true}
-						highlightActiveLine={true}
-						enableSnippets={true}
-						enableBasicAutocompletion={true}
-						enableLiveAutocompletion={true}
-						value={this.state.payload}
-						onChange={this.onChangePayload}
-					/>
-					{this.state.isConnected
-						? <Button style={styles.disconnectButton}
-							onClick={this.onDisconnect}
-							danger >Disconnect</Button>
-						: null}
-					{this.state.showStop
-						? <Button style={styles.stopButton}
-							onClick={this.onStop}
-							danger >Stop</Button>
-						: null}
-				</Col>
-				<Col style={styles.rightContainer}
-					xxl={15} xl={14} lg={12} md={24} sm={24} xs={24} >
-					<h4 style={styles.logConsoleTitle}>Socket.io Log</h4>
-					<AceEditor
-						name='SocketLog'
-						mode='json'
-						theme='monokai'
-						fontSize={16}
-						style={styles.logConsole}
-						showGutter={true}
-						highlightActiveLine={true}
-						readOnly={true}
-						value={this.state.logs}
-					/>
-					{this.state.logs !== '' ? <Button style={styles.clearLogButton}
-						onClick={this.onClearLog}
-						danger >Clear Log</Button> : null}
-				</Col>
-			</Row>
+						{this.state.isConnected
+							? <Button style={styles.disconnectButton}
+								onClick={this.onDisconnect}
+								danger >Disconnect</Button>
+							: null}
+						{this.state.showStop
+							? <Button style={styles.stopButton}
+								onClick={this.onStop}
+								danger >Stop</Button>
+							: null}
+					</Col>
+					<Col style={styles.rightContainer}
+						xxl={15} xl={14} lg={12} md={24} sm={24} xs={24} >
+						<h4 style={styles.logConsoleTitle}>Socket.io Log</h4>
+						<AceEditor
+							name='SocketLog'
+							mode='json'
+							theme='monokai'
+							fontSize={16}
+							style={styles.logConsole}
+							showGutter={true}
+							highlightActiveLine={true}
+							readOnly={true}
+							value={this.state.logs}
+						/>
+						{this.state.logs !== '' ? <Button style={styles.clearLogButton}
+							onClick={this.onClearLog}
+							danger >Clear Log</Button> : null}
+					</Col>
+				</Row>
+				<p style={styles.footerText} >
+					View the source code <a
+						href='https://github.com/TOU-HID/Socket.io-Client-Example-React'
+						target='_blank' rel='noreferrer'>here</a>
+				</p>
+				<p style={styles.footerText} >Please add <span style={styles.footerTextBold}>
+					https://TOU-HID.github.io/socketio-client-react</span> to your CORS whitelist. In case you are having CORS issue.
+				</p>
+			</>
 		);
 	}
 }
