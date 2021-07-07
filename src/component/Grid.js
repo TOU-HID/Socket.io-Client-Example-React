@@ -10,7 +10,15 @@ import styles from './styles'
 // dev.backend.butterflymatrimonial.com
 
 const Search = Input.Search
+// eslint-disable-next-line no-useless-escape
 const secureURLRegex = /^https:\/\/?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+const validateJSON = text => {
+	// eslint-disable-next-line no-useless-escape
+	return /^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@')
+		// eslint-disable-next-line no-useless-escape
+		.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+		.replace(/(?:^|:|,)(?:\s*\[)+/g, ''))
+}
 
 
 class componentName extends Component {
@@ -20,10 +28,11 @@ class componentName extends Component {
 			logs: '',
 			isConnected: false,
 			url: 'https://',
+			event: '',
 			payload: '{}',
 			showStop: false
 		}
-		this.socket = undefined
+		this.socket = {}
 	}
 
 	onChangeAddress = e => {
@@ -38,12 +47,10 @@ class componentName extends Component {
 		})
 	}
 
-	onConnect = value => {
-		if (!this.socket) {
+	onConnect = () => {
+		if (!this.socket.id) {
 			var logs = this.state.logs;
-			if (/^[\],:{}\s]*$/.test(this.state.payload.replace(/\\["\\\/bfnrtu]/g, '@').
-				replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-				replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+			if (validateJSON(this.state.payload)) {
 				if (secureURLRegex.test(this.state.url)) {
 					this.setState({
 						logs: logs + `STATUS: Connecting to socket\n`,
@@ -91,31 +98,43 @@ class componentName extends Component {
 				}
 			} else {
 				this.setState({
+					logs: logs + `WARNING: Invalid option\n`
+				})
+			}
+		}
+	}
+
+	onChangeEventName = e => {
+		this.setState({
+			event: e.target.value
+		})
+	}
+
+	onEmit = () => {
+		if (this.socket.id) {
+			var logs = this.state.logs;
+			if (validateJSON(this.state.payload)) {
+				if (this.state.event !== '') {
+					this.setState({
+						logs: logs + `STATUS: Emitting event\n`
+					})
+					this.socket.emit(this.state.event, JSON.parse(this.state.payload))
+				} else {
+					this.setState({
+						logs: logs + `WARNING: Invalid event name\n`
+					})
+				}
+			} else {
+				this.setState({
 					logs: logs + `WARNING: Invalid payload\n`
 				})
 			}
 		}
 	}
 
-	onChangeEventName(e) {
-		console.log(e.target.value)
-	}
-
-	onEmit(value) {
-		console.log(value)
-	}
-
-	onEventReceived = (eventName, ...args) => {
-		var logs = this.state.logs
-		this.setState({
-			logs: logs + `STATUS: Received Event "${eventName}"\npayload: ${JSON.stringify(args.length > 1 ? args : args[0], undefined, 2)}\n`
-		})
-	}
-
 	onStop = () => {
 		if (this.state.showStop) {
 			this.socket.disconnect()
-			this.socket = undefined
 			this.setState({
 				showStop: false
 			})
@@ -123,12 +142,11 @@ class componentName extends Component {
 	}
 
 	onDisconnect = () => {
-		if (this.socket) {
+		if (this.socket.id) {
 			this.socket.disconnect()
-			this.socket = undefined
 			this.setState({
 				isConnected: false,
-				url: 'https://',
+				event: '',
 				payload: '{}'
 			})
 		}
@@ -137,6 +155,13 @@ class componentName extends Component {
 	onClearLog = () => {
 		this.setState({
 			logs: ''
+		})
+	}
+
+	onEventReceived = (eventName, ...args) => {
+		var logs = this.state.logs
+		this.setState({
+			logs: logs + `STATUS: Received Event "${eventName}"\npayload: ${JSON.stringify(args.length > 1 ? args : args[0], undefined, 2)}\n`
 		})
 	}
 
@@ -152,6 +177,7 @@ class componentName extends Component {
 							enterButton='Emit'
 							size='large'
 							autoComplete
+							value={this.state.event}
 							onChange={this.onChangeEventName}
 							onSearch={this.onEmit}
 						/> :
@@ -159,12 +185,15 @@ class componentName extends Component {
 							placeholder='https://example.com'
 							enterButton='Connect'
 							size='large'
+							autoComplete
 							value={this.state.url}
 							onChange={this.onChangeAddress}
 							onSearch={this.onConnect}
 						/>
 					}
-					<h4 style={styles.payloadEditorTitle}>Socket.io Option (JSON)</h4>
+					<h4 style={styles.payloadEditorTitle}>
+						{this.state.isConnected ? 'Event Payload (JSON)' : 'Socket.io Option (JSON)'}
+					</h4>
 					<AceEditor
 						name='SocketOption'
 						mode='json'
