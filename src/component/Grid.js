@@ -29,7 +29,7 @@ class componentName extends Component {
 			isConnected: false,
 			url: 'https://',
 			event: '',
-			payload: '{}',
+			payload: '{ "transports": ["websocket", "polling"] }',
 			showStop: false
 		}
 		this.socket = {}
@@ -147,7 +147,7 @@ class componentName extends Component {
 			this.setState({
 				isConnected: false,
 				event: '',
-				payload: '{}'
+				payload: '{ "transports": ["websocket", "polling"] }'
 			})
 		}
 	}
@@ -184,7 +184,7 @@ class componentName extends Component {
 							/> :
 							<Search
 								placeholder='https://example.com'
-								enterButton='Connect'
+								enterButton={this.state.showStop ? 'Connecting' : 'Connect'}
 								size='large'
 								autoComplete
 								value={this.state.url}
