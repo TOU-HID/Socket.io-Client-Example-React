@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Socket.io Client Example React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Test and demostrate your [socket.io](https://github.com/socketio/socket.io) enabled server using this simple app. Also can be used as an example to integrate [socket.io-client](https://github.com/socketio/socket.io-client). This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+**Please make sure to whitelist the client hostname in your socket connection option on the server-side.** ([Learn more](https://socket.io/docs/v4/server-initialization/#cors))
+
+Find the official socket.io documentation [here](https://socket.io/docs/v4/).
 
 ## Available Scripts
 
